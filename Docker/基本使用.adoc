@@ -1,0 +1,107 @@
+= 网站
+
+文档 https://docs.docker.com/
+
+== Linux
+
+=== CentOS7
+
+----
+安装流程如下
+
+yum remove docker docker-client \
+                  docker-client-latest \
+                  docker-common \
+                  docker-latest \
+                  docker-latest-logrotate \
+                  docker-logrotate \
+                  docker-selinux \
+                  docker-engine-selinux \
+                  docker-engine
+
+yum install -y yum-utils \
+  device-mapper-persistent-data \
+  lvm2
+
+yum-config-manager \
+    --add-repo \
+    https://download.docker.com/linux/centos/docker-ce.repo
+
+
+yum install docker-ce
+
+这是安装最新版本，参考下面安装指定版本
+
+yum list docker-ce --showduplicates | sort -r
+
+yum install docker-ce-<VERSION STRING>
+
+设为开机启动
+
+systemctl start docker
+
+----
+
+=== 设置淘宝镜像
+
+----
+sudo mkdir -p /etc/docker
+sudo tee /etc/docker/daemon.json <<-'EOF'
+{
+  "registry-mirrors": ["https://a18sehhp.mirror.aliyuncs.com"]
+}
+EOF
+sudo systemctl daemon-reload
+sudo systemctl restart docker
+----
+
+=== 常用命令
+
+==== 下载镜像
+
+docker pull xxx
+
+==== 上传镜像
+
+docker push xxx
+
+==== 修改tag
+
+docker tag xxx:old xxx:new
+
+==== 创建（会自动启动）
+
+docker run xxx
+
+|===
+| 参数 | 说明
+| -p
+| 端口映射
+
+| --name
+| 设定名字
+|===
+
+==== 查看运行中的容器
+
+docker ps
+
+==== 查看所有容器
+
+docker ps -a
+
+==== 停止容器
+
+docker stop xxx
+
+==== 启动容器
+
+docker start xxx
+
+==== 删除容器
+
+docker rm xxx
+
+==== 删除镜像
+
+docker rmi xxx

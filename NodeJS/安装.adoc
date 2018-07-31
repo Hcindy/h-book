@@ -1,0 +1,9 @@
+= Linux
+
+== CentOS7安装
+
+. 百度找到NodeJS官网->Other Downloads->Installing Node.js via package manager->搜索CentOS
+.. curl --silent --location https://rpm.nodesource.com/setup_8.x | sudo bash -
+.. yum -y install nodejs
+. 设置淘宝镜像
+.. npm config set registry http://registry.npm.taobao.org

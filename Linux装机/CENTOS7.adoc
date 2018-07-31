@@ -1,0 +1,61 @@
+= CentOS7
+
+== 安装
+
+. 百度找到CentOS7官网，下载ISO镜像，最小是min，最大是everything，如CentOS-7-x86_64-Everything-1708.iso
+. 读盘开始安装
+.. 第一个界面选择安装，不选检查
+.. 第二个界面会让按回车
+.. 第三个界面
+... 选择时间时区，确保时间准确，或者使用网络获取时间
+... 安装应用中左边选择GNOME，右边选择Application
+... 格式化硬盘自动分区就好
+... 网络中下面更改host name（确保局域网中没有重名）；右边点齿轮，IPv4可配静态IP；上面开打开关（启动系统时会自动启用网卡）
+.. 第四个界面，设置root密码；设置一般用户，勾选将次用户设为管理员
+
+== 配置
+
+* 关闭防火墙
+** service firewalld stop
+** chkconfig firewalld off
+* 关闭SELinux
+** setenforce 0
+** 打开gedit /etc/selinux/config，并修改里面的SELINUX为disabled，即set SELINUX=disabled // 改enforcing为disabled
+* 开启ssh root登陆
+** 打开gedit /etc/ssh/sshd_config，搜索root关键字，找到后将前面的#去掉
+* 开启系统启动自动启用网卡
+** 开打gedit /etc/sysconfig/network-scripts/ifcfg-ens33，修改里面的ONBOOT=no为yes
+** PS: ens33根据实际用的网卡修改
+
+== 常用命令
+
+=== 修改host name
+
+hostnamectl set-hostname xxx
+
+=== 开启/关闭服务开机自启
+
+chkconfig xxx on
+
+chkconfig xxx off
+
+=== 启动/停止/查看服务
+
+service xxx start
+
+service xxx stop
+
+service xxx status
+
+=== yum搜索/网络安装/本地安装
+
+yum search xxx
+
+yum install xxx
+
+yum localinstall *.rpm 或者 rpm -Uvh *.rpm 或者 rpm -ivh *.rpm
+
+=== yum只下载不安装
+
+yum install xxx --downloadonly --downloaddir=/yyy
+
