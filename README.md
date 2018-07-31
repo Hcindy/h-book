@@ -1,3 +1,0 @@
-﻿# HBook
-
-gitbook serve
