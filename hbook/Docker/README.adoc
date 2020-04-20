@@ -1,0 +1,120 @@
+= Docker
+
+https://www.docker.com/
+
+https://docs.docker.com/
+
+https://hub.docker.com/
+
+== 官网安装
+
+=== CentOS7
+
+安装最新版本
+
+----
+yum remove docker docker-client \
+                  docker-client-latest \
+                  docker-common \
+                  docker-latest \
+                  docker-latest-logrotate \
+                  docker-logrotate \
+                  docker-selinux \
+                  docker-engine-selinux \
+                  docker-engine
+
+yum install -y yum-utils \
+  device-mapper-persistent-data \
+  lvm2
+
+yum-config-manager \
+    --add-repo \
+    https://download.docker.com/linux/centos/docker-ce.repo
+
+yum install docker-ce
+----
+
+安装指定版本
+
+----
+yum list docker-ce --showduplicates | sort -r
+
+yum install docker-ce-<VERSION STRING>
+----
+
+设置淘宝镜像
+
+----
+mkdir -p /etc/docker
+tee /etc/docker/daemon.json <<-'EOF'
+{
+  "registry-mirrors": ["https://a18sehhp.mirror.aliyuncs.com"]
+}
+EOF
+systemctl daemon-reload
+systemctl restart docker
+----
+
+== 常用命令
+
+下载镜像
+
+ docker pull <name>:<version>
+
+上传镜像
+
+ docker push <name>:<version>
+
+修改tag
+
+ docker tag <name>:<version> <name>:<version>
+
+启动容器
+
+ docker run xxx
+
+|===
+| 参数 | 说明
+| -p 外部端口:内部端口
+| 端口映射
+
+| --name <name>
+| 设定名字
+
+| -d
+| 后台启动
+
+| -v 外部路径:内部路径
+| 目录挂载
+
+| --rm
+| 退出时自动停止并删除
+|===
+
+查看运行中的容器
+
+ docker ps
+
+查看所有容器
+
+ docker ps -a
+
+停止容器
+
+ docker stop <name/id>
+
+启动容器
+
+ docker start <name/id>
+
+删除容器
+
+ docker rm <name/id>
+
+删除镜像
+
+ docker rmi <name:version/id>
+
+运行时从容器内部拷贝文件到外部
+
+ docker cp <name/id>:<path> <path>

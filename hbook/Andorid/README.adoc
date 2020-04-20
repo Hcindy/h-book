@@ -1,0 +1,59 @@
+= Andorid
+
+https://developer.android.google.cn/
+
+== Andorid Studio
+
+https://developer.android.google.cn/studio
+
+安装
+
+ android-studio-ide-191.5900203-windows.exe
+
+ 停在最后步Finish，先配置
+
+配置
+
+ <path>/Andorid Studio/bin/idea.properties
+
+ 取消注释并按需修改路径，如
+
+ idea.config.path=D:/IDEProperties/.AndroidStudio/config
+ idea.system.path=D:/IDEProperties/.AndroidStudio/system
+ idea.plugins.path=${idea.config.path}/plugins
+ idea.log.path=${idea.system.path}/log
+
+启动
+
+. 选择Do not import settings不导入配置
+. 选择Don't send
+. 选择Cancel不设置代理
+. 选择Next
+. 选择Custom -> Next
+. 选择Darcula -> Next
+. 改选SDK Location => Next
+. 改选RAM -> Next
+. 选择Finish
+. 选择Finish
+. 点击Configure -> Settings
+
+ System Settings -> Startup/Shutdown -> 去掉全部勾勾
+ System Settings -> Synchronization -> 去掉全部勾勾
+ Keymap -> Duplicate Line or Selection -> Add Keyboard Shortcut -> Ctrl + D
+ Editor -> Font -> Font和Size
+ Editor -> Inspections -> Spelling -> 去掉勾勾
+ Editor -> File Encodings -> UTF-8
+
+ == Chrome Dev Tools
+
+ PC
+
+  chrome://inspect/#devices
+
+手机
+
+魅族16
+
+ USB连接后，选择内置光驱，复制驱动和说明文档到本地。设备管理器，更新驱动；按照说明文档添加adb_usb.ini文件和里面的内容
+
+ 微信，给自己发信息http://debugx5.qq.com，打开，勾选打开TBS内核Inspector调试功能、打开TBS内核X5jscore inspect调试功能、打开vConsole调试功能

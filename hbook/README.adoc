@@ -1,0 +1,13 @@
+= HBook
+
+docker run --rm gitbook:<tag> gitbook --help 
+
+docker run --rm gitbook:<tag> gitbook help
+
+docker run -d -p 40000:4000 --name gitbook gitbook:<tag>
+
+docker run -d -p 40000:4000 --name gitbook:<tag> gitbook serve /root/books --no-watch --no-live
+
+docker run -d -p 40000:4000 --name gitbook -v <mybookdir>:/root/books gitbook:<tag>
+
+docker run -d -p 40000:4000 --name gitbook -v <mybookdir>:/mnt gitbook:<tag> gitbook serve /mnt

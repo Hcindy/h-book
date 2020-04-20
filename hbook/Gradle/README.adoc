@@ -1,0 +1,17 @@
+= Gradle
+
+https://gradle.org/
+
+== 配置
+
+缓存地址
+
+ 环境变量
+ GRADLE_USER_HOME
+ D:\Dependencies\.gradle
+
+指定版本
+
+ 环境变量
+ GRADLE_HOME
+ <path>
