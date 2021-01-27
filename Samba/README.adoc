@@ -1,0 +1,14 @@
+= Samba
+
+ docker run -it \
+           --name samba \
+           -p 139:139 \
+           -p 445:445 \
+           -v /root/hostpath/samba:/home/share \
+           -m 512m \
+           --restart=always \
+           -d dperson/samba \
+           -u "share;12323123" \
+           -s "share;/home/share;yes;no;no;share;share;share"
+
+windows映射网络驱动器，使用凭证，share 12323123

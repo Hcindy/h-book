@@ -13,6 +13,8 @@ sync_github:
     - cd /builds/root/h-book/
     - git config user.email xxx
     - git config user.name "Hcindy"
+    - git rm -r *
+    - git commit -m "clear"
   script:
     - cd /builds/root/hbook
     - cp -R * /builds/root/h-book/
