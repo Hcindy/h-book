@@ -1,0 +1,25 @@
+stages:
+  - sync
+
+sync_github:
+  stage: sync
+  image: "hbook:github"
+  tags:
+    - shared
+  before_script:
+    - ls /builds/root/
+    - rm -rf /builds/root/h-book/
+    - git clone https://github.com/Hcindy/h-book.git /builds/root
+    - cd /builds/root/h-book/
+    - git config user.email xxx
+    - git config user.name "Hcindy"
+  script:
+    - cd /builds/root/hbook
+    - cp -R * /builds/root/h-book/
+    - sed -i 's#- git clone https://github.com/Hcindy/h-book.git /builds/root
+    - sed -i 's#- git config user\.email.*#- git config user\.email xxx#' .gitlab-ci.yml
+    - cp .gitlab-ci.yml /builds/root/h-book/
+    - cd /builds/root/h-book/
+    - git add .
+    - git commit -m "new"
+    - git push

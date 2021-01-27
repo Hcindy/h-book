@@ -1,0 +1,7 @@
+= NodeJS
+
+https://github.com/nodejs/docker-node/blob/master/README.md#how-to-use-this-image
+
+https://github.com/nodejs/docker-node/blob/master/docs/BestPractices.md
+
+https://github.com/nodejs/docker-node/blob/be0fbedc36a8746a7cbe3b3b1972175177fcdadd/12/alpine/Dockerfile
