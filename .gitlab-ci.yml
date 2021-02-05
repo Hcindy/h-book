@@ -10,10 +10,10 @@ sync_github:
     - rm -rf .git
     - mkdir .local
     - cp -r * .local/
-    - sed -i 's#- git clone https://github.com/Hcindy/h-book.git /builds/root
+    - sed -i 's#- git clone https://github.com/Hcindy/h-book.git
     - sed -i 's#- git config user\.email.*#- git config user\.email xxx#' .gitlab-ci.yml
     - mv .local local
-    - git clone https://github.com/Hcindy/h-book.git /builds/root
+    - git clone https://github.com/Hcindy/h-book.git
     - cd h-book
     - git config user.email xxx
     - git config user.name "Hcindy"
