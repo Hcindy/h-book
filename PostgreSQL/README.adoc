@@ -1,0 +1,45 @@
+= PostgreSQL
+
+https://www.postgresql.org/
+
+https://hub.docker.com/_/postgres
+
+== Docker版
+
+下载
+
+ docker pull postgres:11.9-alpine
+
+启动
+
+start a postgres instance
+
+ docker run --name postgres -e POSTGRES_PASSWORD=mysecretpassword -d postgres:11.9-alpine
+
+start with persistent storage
+
+ docker run --name postgres -v /root/hostpath/postgresql:/var/lib/postgresql/data -d postgres:11.9-alpine
+
+== 配置
+
+https://www.postgresql.org/docs/11.9/
+
+https://www.postgresql.org/docs/11.9/contrib.html
+
+https://www.postgresql.org/docs/11.9/sql-commands.html
+
+== K8S启、停
+
+```cmd
+cd /root/ssd/PostgreSQL
+kubectl create configmap postgresql-init --from-file=init.sql
+kubectl get configmaps postgresql-init -o yaml > postgresql-init.yml
+kubectl apply -f postgresql.yml
+
+cd /root/ssd/PostgreSQL
+kubectl delete -f postgresql.yml
+kubectl delete -f postgresql-init.yml
+rm -rf /root/ssd/hostpath/postgresql
+```
+
+TIP: gitlab需要用到pg_trgm特性，但在gitlab启动的时候会自动执行命令，所以没在init.sql里写CREATE EXTENSION pg_trgm;之类的语句

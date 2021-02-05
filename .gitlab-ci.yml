@@ -6,22 +6,21 @@ sync_github:
   image: "hbook:github"
   tags:
     - shared
-  before_script:
-    - ls /builds/root/
-    - rm -rf /builds/root/h-book/
+  script:
+    - rm -rf .git
+    - mkdir .local
+    - cp -r * .local/
+    - sed -i 's#- git clone https://github.com/Hcindy/h-book.git /builds/root
+    - sed -i 's#- git config user\.email.*#- git config user\.email xxx#' .gitlab-ci.yml
+    - mv .local local
     - git clone https://github.com/Hcindy/h-book.git /builds/root
-    - cd /builds/root/h-book/
+    - cd h-book
     - git config user.email xxx
     - git config user.name "Hcindy"
     - git rm -r *
     - git commit -m "clear"
-  script:
-    - cd /builds/root/hbook
-    - cp -R * /builds/root/h-book/
-    - sed -i 's#- git clone https://github.com/Hcindy/h-book.git /builds/root
-    - sed -i 's#- git config user\.email.*#- git config user\.email xxx#' .gitlab-ci.yml
-    - cp .gitlab-ci.yml /builds/root/h-book/
-    - cd /builds/root/h-book/
+    - cp -r ../local/* .
+    - cp ../.gitlab-ci.yml .
     - git add .
-    - git commit -m "new"
+    - git commit -m "update"
     - git push
