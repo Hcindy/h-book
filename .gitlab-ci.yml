@@ -3,7 +3,7 @@ stages:
 
 sync_github:
   stage: sync
-  image: "hbook:github"
+  image: "git"
   tags:
     - shared
   script:

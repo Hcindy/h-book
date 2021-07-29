@@ -1,0 +1,174 @@
+= Gitlab
+
+https://about.gitlab.com/
+
+https://docs.gitlab.com/
+
+https://docs.gitlab.com/ce/install/README.html
+
+https://hub.docker.com/r/gitlab/gitlab-ce/
+
+https://docs.gitlab.com/ce/install/docker.html
+
+https://docs.gitlab.com/omnibus/docker/
+
+== Docker版
+
+下载
+
+ docker pull gitlab/gitlab-ce:13.6.3-ce.0
+
+启动
+
+start a gitlab instance
+
+```cmd
+docker run --detach \
+  --hostname gitlab.example.com \
+  --publish 443:443 --publish 80:80 --publish 22:22 \
+  --name gitlab \
+  --restart always \
+  --volume /srv/gitlab/config:/etc/gitlab \
+  --volume /srv/gitlab/logs:/var/log/gitlab \
+  --volume /srv/gitlab/data:/var/opt/gitlab \
+  gitlab/gitlab-ce:13.6.3-ce.0
+```
+
+start a gitlab instance on SELinux
+
+```cmd
+docker run --detach \
+  --hostname gitlab.example.com \
+  --publish 443:443 --publish 80:80 --publish 22:22 \
+  --name gitlab \
+  --restart always \
+  --volume /srv/gitlab/config:/etc/gitlab:Z \
+  --volume /srv/gitlab/logs:/var/log/gitlab:Z \
+  --volume /srv/gitlab/data:/var/opt/gitlab:Z \
+  gitlab/gitlab-ce:13.6.3-ce.0
+```
+
+start a gitlab instance with env config
+
+```cmd
+docker run --detach \
+  --hostname gitlab.example.com \
+  --env GITLAB_OMNIBUS_CONFIG="external_url 'http://my.domain.com/'; gitlab_rails['lfs_enabled'] = true;" \
+  --publish 443:443 --publish 80:80 --publish 22:22 \
+  --name gitlab \
+  --restart always \
+  --volume /srv/gitlab/config:/etc/gitlab \
+  --volume /srv/gitlab/logs:/var/log/gitlab \
+  --volume /srv/gitlab/data:/var/opt/gitlab \
+  gitlab/gitlab-ce:13.6.3-ce.0
+```
+
+TIP: gitlab启动时间较长，docker ps看到显示healthy才算启动完成
+
+== 配置
+
+https://docs.gitlab.com/omnibus/settings/README.html
+
+https://docs.gitlab.com/charts/advanced/index.html
+
+https://docs.gitlab.com/omnibus/settings/redis.html
+
+https://docs.gitlab.com/charts/advanced/external-redis/index.html
+
+https://docs.gitlab.com/omnibus/settings/database.html
+
+https://docs.gitlab.com/charts/advanced/external-db/index.html
+
+启动后仍可以修改修改配置
+
+ docker exec -it gitlab vi /etc/gitlab/gitlab.rb
+
+或者
+
+ docker stop gitlab
+ vi /srv/gitlab/config/gitlab.rb
+ docker start gitlab
+
+TIP: 获取默认配置文件
+
+----
+docker run --detach \
+  --hostname gitlab.example.com \
+  --name gitlab \
+  gitlab/gitlab-ce:13.6.3-ce.0
+
+docker exec -it gitlab cat /etc/gitlab/gitlab.rb > gitlab.rb
+
+docker stop gitlab
+docker rm gitlab
+----
+
+== K8S启、停
+
+```cmd
+cd /root/Gitlab
+kubectl apply -f gitlab.yml
+
+cd /root/Gitlab
+kubectl delete -f gitlab.yml
+rm -rf /root/hostpath/gitlab
+```
+
+TIP: 不禁用Prometheus会报如下错误
+
+----
+==> /var/log/gitlab/prometheus/current <==
+2019-07-03_13:11:17.80082 level=error ts=2019-07-03T13:11:17.800690372Z caller=klog.go:94 component=k8s_client_runtime func=ErrorDepth msg="github.com/prometheus/prometheus/discovery/kubernetes/kubernetes.go:282: Failed to list *v1.Pod: pods is forbidden: User \"system:serviceaccount:default:default\" cannot list resource \"pods\" in API group \"\" at the cluster scope"
+2019-07-03_13:11:17.80162 level=error ts=2019-07-03T13:11:17.801352304Z caller=klog.go:94 component=k8s_client_runtime func=ErrorDepth msg="github.com/prometheus/prometheus/discovery/kubernetes/kubernetes.go:334: Failed to list *v1.Node: nodes is forbidden: User \"system:serviceaccount:default:default\" cannot list resource \"nodes\" in API group \"\" at the cluster scope"
+解决办法，参考
+https://stackoverflow.com/questions/53908848/kubernetes-pods-nodes-is-forbidden
+
+apiVersion: rbac.authorization.k8s.io/v1beta1
+kind: ClusterRole
+metadata:
+  name: prom-admin
+rules:
+# Just an example, feel free to change it
+- apiGroups: [""]
+  resources: ["pods", "nodes"]
+  verbs: ["get", "watch", "list"]
+
+---
+apiVersion: rbac.authorization.k8s.io/v1beta1
+kind: ClusterRoleBinding
+metadata:
+  name: prom-rbac
+subjects:
+- kind: ServiceAccount
+  name: default
+roleRef:
+  kind: ClusterRole
+  name: prom-admin
+  apiGroup: rbac.authorization.k8s.io
+----
+
+== 迁移
+
+复制数据
+
+ docker stop gitlab
+ cd /srv
+ zip -r gitlab.zip gitlab
+
+粘贴至目标
+
+ mv gitlab.zip /srv
+ unzip gitlab.zip
+ docker run 同一个镜像
+
+docker ps和docker logs gitlab结合观察是否有异常，如果存在权限异常，尝试
+
+ docker exec -it gitlab update-permissions
+ docker restart gitlab
+
+和
+
+ docker stop gitlab
+ chmod 2770 /srv/gitlab/data/git-data/repositories/
+
+如果仍存在异常，仔细看docker logs gitlab日志信息
